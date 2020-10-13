@@ -1,0 +1,64 @@
+[default]
+interval = "1m"
+
+[alert]
+
+  [alert.pagerduty]
+  client_id = ""
+  client_secret = ""
+
+  [alert.slack]
+  client_id = ""
+  client_secret = ""
+  default_channel = "alert"
+
+[service]
+
+  [service.elasticsearch.app]
+  label = "ElasticSearch Production"
+  address = ""
+  alerts = ["pagerduty"]
+  interval = "1m"
+
+    [service.elasticsearch.app.required]
+    min_status = "yellow"
+
+    [service.elasticsearch.app.alert.pagerduty]
+    status = "failure"
+    min_failures = 5
+
+  [service.http.some_website]
+  label = "website-healthcheck"
+  address = ""
+  interval = "1m"
+
+    [service.http.some_website.required]
+    in_response = "\"elasticsearch\": \"ok\""
+    status_code = 200
+
+  [service.https.some_website]
+  label = "website-https-healthcheck"
+  address = ""
+  alerts = ["slack"]
+  interval = "1m"
+
+    [service.https.some_website.required]
+    status_code = 200
+    insecure = false
+
+    [service.https.some_website.alert.slack]
+    type = "slack"
+    channel = "alerts"
+    min_failures = 5
+    message = "website is down"
+  
+  [service.rabbitmq.production]
+  label = "rabbitmq"
+  interval = "1m"
+
+  [service.tcp.influxdb]
+  label = "InfluxDB"
+  host = "127.0.0.1"
+  port = 8888
+  interval = "1m"
+
