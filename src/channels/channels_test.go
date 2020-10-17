@@ -1,12 +1,9 @@
 package channels
 
 import (
-	"sync"
 	"testing"
 	"time"
 )
-
-var wg sync.WaitGroup
 
 func TestSetup(t *testing.T) {
 	Setup()

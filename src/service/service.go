@@ -1,7 +1,7 @@
 package service
 
 import (
-	"amnesia/src/lib/helpers"
+	"amnesia/src/helpers"
 	"errors"
 )
 

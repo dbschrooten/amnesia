@@ -18,6 +18,7 @@ var (
 )
 
 func Setup() {
+	log.Print("Setup channels")
 	go Listener()
 }
 
