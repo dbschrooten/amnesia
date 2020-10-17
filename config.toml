@@ -52,13 +52,13 @@ interval = "1m"
     min_failures = 5
     message = "website is down"
   
-  [service.rabbitmq.production]
-  label = "rabbitmq"
-  interval = "1m"
+  # [service.rabbitmq.production]
+  # label = "rabbitmq"
+  # interval = "1m"
 
-  [service.tcp.influxdb]
-  label = "InfluxDB"
-  host = "127.0.0.1"
-  port = 8888
-  interval = "1m"
+  # [service.tcp.influxdb]
+  # label = "InfluxDB"
+  # host = "127.0.0.1"
+  # port = 8888
+  # interval = "1m"
 

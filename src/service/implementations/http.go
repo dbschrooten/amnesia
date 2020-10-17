@@ -1,7 +1,7 @@
 package implementations
 
 import (
-	"amnesia/src/lib/service"
+	"amnesia/src/service"
 	"log"
 )
 

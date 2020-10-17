@@ -62,7 +62,7 @@ func mapDefaults(config map[string]interface{}) error {
 func mapServices(config map[string]interface{}) error {
 	// Parse Services
 	for Type, Service := range config["service"].(map[string]interface{}) {
-		if !helpers.StringInSlice(Type, service.ServiceTypes) {
+		if !helpers.StringInSlice(Type, service.ServiceTypes()) {
 			return fmt.Errorf("Config contains non-existing service type %s", Type)
 		}
 

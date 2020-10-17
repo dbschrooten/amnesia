@@ -8,4 +8,6 @@ const (
 
 	SrvWriteTimeout = 15 * time.Second
 	SrvReadTimeout  = 15 * time.Second
+
+	PluginFolder = "./plugins"
 )

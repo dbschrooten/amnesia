@@ -3,11 +3,17 @@ package cmd
 import (
 	"amnesia/src/channels"
 	"amnesia/src/config"
+	"amnesia/src/dispatcher"
+	"amnesia/src/plugin"
 	"encoding/json"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
+)
+
+var (
+	r *mux.Router
 )
 
 func Health(w http.ResponseWriter, r *http.Request) {
@@ -24,8 +30,24 @@ func Health(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func Routes() *http.Server {
+	r = mux.NewRouter()
+	r.HandleFunc("/api/v1/health", Health)
+
+	return &http.Server{
+		Handler:      r,
+		Addr:         config.SrvAddr,
+		WriteTimeout: config.SrvWriteTimeout,
+		ReadTimeout:  config.SrvReadTimeout,
+	}
+}
+
 func Server() error {
 	config.Load()
+
+	if err := plugin.Setup(); err != nil {
+		return err
+	}
 
 	if err := config.Setup(); err != nil {
 		return err
@@ -33,17 +55,9 @@ func Server() error {
 
 	channels.Setup()
 
-	r := mux.NewRouter()
-	r.HandleFunc("/api/v1/health", Health)
+	srv := Routes()
 
-	srv := &http.Server{
-		Handler:      r,
-		Addr:         config.SrvAddr,
-		WriteTimeout: config.SrvWriteTimeout,
-		ReadTimeout:  config.SrvReadTimeout,
-	}
-
-	log.Printf("Listening at %s", config.SrvAddr)
+	go dispatcher.Setup()
 
 	if err := srv.ListenAndServe(); err != nil {
 		return err

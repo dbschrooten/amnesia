@@ -6,22 +6,31 @@ import (
 )
 
 var (
-	ServiceTypes = []string{
-		"elasticsearch",
-		"rabbitmq",
-		"mysql",
-		"postgresql",
-
+	ServiceImplementations = []string{
 		"http",
 		"https",
 		"tcp",
 		"udp",
-
+		"telnet",
+		"graphql",
+	}
+	KubernetesImplementations = []string{
 		"kubernetes_pod",
 		"kubernetes_statefulset",
 		"kubernetes_deployment",
 	}
+	PluginImplementations []string
 )
+
+func ServiceTypes() []string {
+	var result []string
+
+	result = append(result, ServiceImplementations...)
+	result = append(result, KubernetesImplementations...)
+	result = append(result, PluginImplementations...)
+
+	return result
+}
 
 type Service struct {
 	Type     string
@@ -30,15 +39,17 @@ type Service struct {
 	Address  string   `toml:"address"`
 	Host     string   `toml:"host"`
 	Port     int      `toml:"port"`
+	Interval string   `toml:"interval"`
+	Timeout  string   `toml:"timeout"`
 	Alerts   []string `toml:"alerts"`
 	Required interface{}
 	Alert    interface{}
 }
 
-func (s *Service) Setup() error {
+func (s *Service) Run() error {
 	if !helpers.StringInSlice(
 		s.Type,
-		ServiceTypes,
+		ServiceTypes(),
 	) {
 		return errors.New("Unknown service type")
 	}
