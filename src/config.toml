@@ -15,8 +15,8 @@ interval = "1m"
 [service]
 
   [service.elasticsearch.app]
-  label = "ElasticSearch Production"
-  address = ""
+  label = "elasticsearch"
+  address = "http://localhost:9200"
   alerts = ["pagerduty"]
   interval = "1m"
 

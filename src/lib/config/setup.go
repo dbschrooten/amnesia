@@ -5,23 +5,39 @@ import (
 	"amnesia/src/lib/service"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/BurntSushi/toml"
 	"github.com/mitchellh/mapstructure"
 )
 
+type ConfigDefaults struct {
+	Interval time.Duration
+}
+
 var (
+	Defaults ConfigDefaults
 	Services []service.Service
 )
 
 func Setup() error {
 	var config map[string]interface{}
 
-	if _, err := toml.DecodeFile("src/config.toml", &config); err != nil {
+	if _, err := toml.DecodeFile(ConfigPath, &config); err != nil {
 		return err
 	}
 
 	log.Print("Load config.toml")
+
+	defaultInterval, err := time.ParseDuration(
+		config["default"].(map[string]interface{})["interval"].(string),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	Defaults.Interval = defaultInterval
 
 	// Parse Services
 	for Type, Service := range config["service"].(map[string]interface{}) {
@@ -40,7 +56,7 @@ func Setup() error {
 	}
 
 	// Parse Alerts
-	log.Print(Services)
+	log.Print("Parsed config.toml")
 
 	return nil
 }
