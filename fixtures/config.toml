@@ -37,22 +37,44 @@ interval = "1m30s"
   [service.required]
   min_status = "yellow"
 
+  [[service.event]]
+  id = "yellow_status"
+  
+    [service.event.required]
+    min_status = "red"
+
+  [[service.event]]
+  id = "red_status"
+
+    [service.event.required]
+    min_status = "red"
+
   [[service.alert]]
-  id = "slack_company_1"
+  event = "yellow_status"
+  alert = "slack_company_1"
   min_failed = 5
   
   [[service.alert]]
-  id = "pagerduty_company_1"
+  event = "red_status"
+  alert = "pagerduty_company_1"
   min_failed = 10
 
 [[service]]
 type = "http"
 id = "website_healthcheck"
 name = "Website Healthcheck"
-address = ""
+address = "http://www.google.nl"
+port = 80
 alerts = ["email_company_1"]
 interval = "1m"
 
-    [service.required]
-    in_response = "\"elasticsearch\": \"ok\""
-    status_code = 200
+    [[service.event]]
+    id = "elasticsearch"
+
+      [[service.event.required]]
+      in_response = "\"elasticsearch\": \"ok\""
+
+    [[service.alert]]
+    event = "elasticsearch"
+    alert = "email_company_1"
+    min_failed = 5

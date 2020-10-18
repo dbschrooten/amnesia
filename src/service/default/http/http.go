@@ -1,19 +1,13 @@
 package http
 
 import (
-	"amnesia/src/service"
+	"amnesia/src/lib"
 	"log"
 )
 
-type ServiceRequired struct {
-	InResponse string
-	StatusCode int
-}
-
 type Service struct {
-	Service  service.Service
-	required ServiceRequired
-	service.Implementation
+	Service interface{}
+	lib.Implementation
 }
 
 func (s *Service) Run() error {

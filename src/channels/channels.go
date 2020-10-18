@@ -6,15 +6,13 @@ import (
 )
 
 type Event struct {
-	Id    string
-	Label string
-	Time  time.Time
+	Id   string
+	Time time.Time
 }
 
 var (
-	AlertEvents   = make(chan Event)
-	WarningEvents = make(chan Event)
-	InfoEvents    = make(chan Event)
+	ServiceEvents = make(chan Event)
+	CheckEvents   = make(chan Event)
 	DebugEvents   = make(chan Event)
 )
 
@@ -28,12 +26,10 @@ func Listener() {
 
 	for {
 		select {
-		case e := <-AlertEvents:
-			log.Printf("Alert event received %v", e)
-		case e := <-WarningEvents:
-			log.Printf("Warning event received %v", e)
-		case e := <-InfoEvents:
-			log.Printf("Info event received %v", e)
+		case e := <-ServiceEvents:
+			log.Printf("Service event received %v", e)
+		case e := <-CheckEvents:
+			log.Printf("Check event received %v", e)
 		case e := <-DebugEvents:
 			log.Printf("Debug event received %v", e)
 		}

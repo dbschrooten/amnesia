@@ -1,4 +1,4 @@
-package service
+package lib
 
 type Implementation interface {
 	Info() map[string]string
