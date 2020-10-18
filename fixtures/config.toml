@@ -2,10 +2,6 @@
 interval = "1m"
 language = "en"
 
-[[exporter]]
-type = "prometheus"
-events = ["alert", "warning", "info"]
-
 [[alert]]
 type = "pagerduty"
 id = "pagerduty_company_1"
@@ -36,10 +32,18 @@ id = "elasticsearch_prod"
 name = "Elasticsearch Production"
 address = "http://localhost:9200"
 alerts = ["slack_company_1", "pagerduty_company_1"]
-interval = "1m"
+interval = "1m30s"
 
   [service.required]
   min_status = "yellow"
+
+  [[service.alert]]
+  id = "slack_company_1"
+  min_failed = 5
+  
+  [[service.alert]]
+  id = "pagerduty_company_1"
+  min_failed = 10
 
 [[service]]
 type = "http"
