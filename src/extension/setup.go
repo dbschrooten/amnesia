@@ -52,7 +52,7 @@ func mapPlugin(path string) error {
 func loader() error {
 	if err := filepath.Walk(config.PluginFolder, func(path string, info os.FileInfo, err error) error {
 		// only scan for .so plugin files
-		if !info.IsDir() {
+		if info != nil && !info.IsDir() {
 			if filepath.Ext(path) == ".so" {
 				if err := mapPlugin(path); err != nil {
 					return err
