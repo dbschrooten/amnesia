@@ -61,19 +61,40 @@ func mapDefaults(config map[string]interface{}) error {
 
 func mapServices(config map[string]interface{}) error {
 	// Parse Services
-	for Type, Service := range config["service"].(map[string]interface{}) {
-		if !helpers.StringInSlice(Type, service.ServiceTypes()) {
-			return fmt.Errorf("Config contains non-existing service type %s", Type)
+	for _, Service := range config["service"].([]map[string]interface{}) {
+		if !helpers.StringInSlice(Service["type"].(string), service.ServiceTypes()) {
+			return fmt.Errorf("Config contains non-existing service type %s", Service["type"].(string))
 		}
 
-		// Need more validation
-		for Id, Config := range Service.(map[string]interface{}) {
-			var serviceConfig service.Service
-			serviceConfig.Type = Type
-			serviceConfig.Id = Id
-			mapstructure.Decode(Config, &serviceConfig)
-			Services = append(Services, serviceConfig)
+		var serviceConfig service.Service
+		mapstructure.Decode(Service, &serviceConfig)
+
+		// do more validation in here
+		if Service["interval"] != nil {
+			intVal, err := time.ParseDuration(Service["interval"].(string))
+
+			if err != nil {
+				return err
+			}
+
+			serviceConfig.Interval = intVal
+		} else {
+			serviceConfig.Interval = Defaults.Interval
 		}
+
+		if Service["timeout"] != nil {
+			timeOut, err := time.ParseDuration(Service["timeout"].(string))
+
+			if err != nil {
+				return err
+			}
+
+			serviceConfig.Timeout = timeOut
+		} else {
+			serviceConfig.Timeout = Defaults.Timeout
+		}
+
+		Services = append(Services, serviceConfig)
 	}
 
 	return nil

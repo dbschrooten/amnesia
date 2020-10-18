@@ -1,7 +1,6 @@
 package service
 
-type ServiceImpl interface {
+type Implementation interface {
 	Info() map[string]string
-	Check() error
-	Connect() error
+	Run() error
 }

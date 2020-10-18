@@ -1,4 +1,4 @@
-package plugin
+package extension
 
 import (
 	"amnesia/src/config"
@@ -11,8 +11,13 @@ import (
 )
 
 var (
-	LoadedPlugins = make(map[string]service.ServiceImpl)
+	LoadedPlugins = make(map[string]Extension)
 )
+
+type Extension interface {
+	Info() map[string]string
+	Run() error
+}
 
 func mapPlugin(path string) error {
 	plug, err := plugin.Open(path)
@@ -21,13 +26,13 @@ func mapPlugin(path string) error {
 		return err
 	}
 
-	impl, err := plug.Lookup("Implementation")
+	impl, err := plug.Lookup("Extension")
 
 	if err != nil {
 		return err
 	}
 
-	implPlug, ok := impl.(service.ServiceImpl)
+	implPlug, ok := impl.(Extension)
 
 	if !ok {
 		return fmt.Errorf("Unexpected type from module symbol")
@@ -39,7 +44,7 @@ func mapPlugin(path string) error {
 	LoadedPlugins[pluginInfo["name"]] = implPlug
 	service.PluginImplementations = append(service.PluginImplementations, pluginInfo["name"])
 
-	log.Printf("Loaded Plugin: %s", implPlug.Info()["name"])
+	log.Printf("Loaded Extension: %s", implPlug.Info()["name"])
 
 	return nil
 }
@@ -49,7 +54,9 @@ func loader() error {
 		// only scan for .so plugin files
 		if !info.IsDir() {
 			if filepath.Ext(path) == ".so" {
-				mapPlugin(path)
+				if err := mapPlugin(path); err != nil {
+					return err
+				}
 			}
 		}
 

@@ -3,8 +3,8 @@ package cmd
 import (
 	"amnesia/src/channels"
 	"amnesia/src/config"
-	"amnesia/src/dispatcher"
-	"amnesia/src/plugin"
+	"amnesia/src/dispatch"
+	"amnesia/src/extension"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -45,7 +45,7 @@ func Routes() *http.Server {
 func Server() error {
 	config.Load()
 
-	if err := plugin.Setup(); err != nil {
+	if err := extension.Setup(); err != nil {
 		return err
 	}
 
@@ -57,7 +57,7 @@ func Server() error {
 
 	srv := Routes()
 
-	go dispatcher.Setup()
+	go dispatch.Setup()
 
 	if err := srv.ListenAndServe(); err != nil {
 		return err

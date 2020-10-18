@@ -1,38 +1,40 @@
 package main
 
 import (
+	"amnesia/src/extension"
 	"amnesia/src/service"
 	"log"
 )
 
-type ImplEsRequired struct {
+type ServiceRequired struct {
 	MinStatus string
 }
 
-type ImplEs struct {
+type ServiceExt struct {
 	Service  service.Service
-	required ImplEsRequired
-	service.ServiceImpl
+	required ServiceRequired
+	extension.Extension
 }
 
-func (i *ImplEs) Info() map[string]string {
+func (s *ServiceExt) Info() map[string]string {
 	return map[string]string{
+		"type":    "service",
 		"name":    "elasticsearch",
 		"version": "1.0.0",
 		"author":  "David Schrooten",
 	}
 }
 
-func (i *ImplEs) Check() error {
+func (s *ServiceExt) Run() error {
 	log.Print("Check Elasticsearch")
 	return nil
 }
 
-func (i *ImplEs) Connect() error {
+func (s *ServiceExt) connect() error {
 	log.Print("Connect Elasticsearch")
 	return nil
 }
 
 var (
-	Implementation ImplEs
+	Extension ServiceExt
 )

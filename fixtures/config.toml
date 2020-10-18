@@ -1,64 +1,54 @@
 [default]
 interval = "1m"
+language = "en"
 
-[alert]
+[[exporter]]
+type = "prometheus"
+events = ["alert", "warning", "info"]
 
-  [alert.pagerduty]
-  client_id = ""
-  client_secret = ""
+[[alert]]
+type = "pagerduty"
+id = "pagerduty_company_1"
+name = "Pager Duty Company 1"
+client_id = ""
+client_secret = ""
 
-  [alert.slack]
-  client_id = ""
-  client_secret = ""
-  default_channel = "alert"
+[[alert]]
+type = "slack"
+id = "slack_company_1"
+name = "Slack Company 1"
+client_id = ""
+client_secret = ""
+channel = "alert"
 
-[service]
+[[alert]]
+type = "email"
+id = "email_company_1"
+name = "Email Company 1"
+mail_type = "imap"
+server = ""
+username = ""
+password = ""
 
-  [service.elasticsearch.app]
-  label = "elasticsearch"
-  address = "http://localhost:9200"
-  alerts = ["pagerduty"]
-  interval = "1m"
+[[service]]
+type = "elasticsearch"
+id = "elasticsearch_prod"
+name = "Elasticsearch Production"
+address = "http://localhost:9200"
+alerts = ["slack_company_1", "pagerduty_company_1"]
+interval = "1m"
 
-    [service.elasticsearch.app.required]
-    min_status = "yellow"
+  [service.required]
+  min_status = "yellow"
 
-    [service.elasticsearch.app.alert.pagerduty]
-    status = "failure"
-    min_failures = 5
+[[service]]
+type = "http"
+id = "website_healthcheck"
+name = "Website Healthcheck"
+address = ""
+alerts = ["email_company_1"]
+interval = "1m"
 
-  [service.http.some_website]
-  label = "website-healthcheck"
-  address = ""
-  interval = "1m"
-
-    [service.http.some_website.required]
+    [service.required]
     in_response = "\"elasticsearch\": \"ok\""
     status_code = 200
-
-  [service.https.some_website]
-  label = "website-https-healthcheck"
-  address = ""
-  alerts = ["slack"]
-  interval = "1m"
-
-    [service.https.some_website.required]
-    status_code = 200
-    insecure = false
-
-    [service.https.some_website.alert.slack]
-    type = "slack"
-    channel = "alerts"
-    min_failures = 5
-    message = "website is down"
-  
-  [service.rabbitmq.production]
-  label = "rabbitmq"
-  interval = "1m"
-
-  [service.tcp.influxdb]
-  label = "InfluxDB"
-  host = "127.0.0.1"
-  port = 8888
-  interval = "1m"
-

@@ -1,4 +1,4 @@
-package dispatcher
+package dispatch
 
 import (
 	"amnesia/src/config"
@@ -6,9 +6,9 @@ import (
 )
 
 func Setup() {
-	log.Print("Dispatcher setup")
+	log.Print("Dispatch setup")
 
 	for _, service := range config.Services {
-		log.Print(service.Type)
+		log.Print(service.Interval.Seconds())
 	}
 }

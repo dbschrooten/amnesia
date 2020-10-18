@@ -2,4 +2,4 @@ test:
 	go test -cover ./src/...
 
 plugins:
-	go build -buildmode=plugin -o plugins/elasticsearch.so src/plugin/plugins/elasticsearch/elasticsearch.go
+	go build -buildmode=plugin -o plugins/service-elasticsearch.so src/extension/plugins/service-elasticsearch/elasticsearch.go

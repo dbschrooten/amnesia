@@ -3,6 +3,7 @@ package service
 import (
 	"amnesia/src/helpers"
 	"errors"
+	"time"
 )
 
 var (
@@ -14,11 +15,6 @@ var (
 		"telnet",
 		"graphql",
 	}
-	KubernetesImplementations = []string{
-		"kubernetes_pod",
-		"kubernetes_statefulset",
-		"kubernetes_deployment",
-	}
 	PluginImplementations []string
 )
 
@@ -26,7 +22,6 @@ func ServiceTypes() []string {
 	var result []string
 
 	result = append(result, ServiceImplementations...)
-	result = append(result, KubernetesImplementations...)
 	result = append(result, PluginImplementations...)
 
 	return result
@@ -35,13 +30,13 @@ func ServiceTypes() []string {
 type Service struct {
 	Type     string
 	Id       string
-	Label    string   `toml:"label"`
-	Address  string   `toml:"address"`
-	Host     string   `toml:"host"`
-	Port     int      `toml:"port"`
-	Interval string   `toml:"interval"`
-	Timeout  string   `toml:"timeout"`
-	Alerts   []string `toml:"alerts"`
+	Label    string        `toml:"label"`
+	Address  string        `toml:"address"`
+	Host     string        `toml:"host"`
+	Port     int           `toml:"port"`
+	Interval time.Duration `toml:"interval"`
+	Timeout  time.Duration `toml:"timeout"`
+	Alerts   []string      `toml:"alerts"`
 	Required interface{}
 	Alert    interface{}
 }
