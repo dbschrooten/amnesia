@@ -1,19 +1,15 @@
 package channels
 
 import (
+	"amnesia/src/channels/processors"
+	"amnesia/src/lib"
 	"log"
-	"time"
 )
 
-type Event struct {
-	Id   string
-	Time time.Time
-}
-
 var (
-	ServiceEvents = make(chan Event)
-	CheckEvents   = make(chan Event)
-	DebugEvents   = make(chan Event)
+	ServiceEvents = make(chan lib.ChannelEvent)
+	CheckEvents   = make(chan lib.ChannelEvent)
+	DebugEvents   = make(chan lib.ChannelEvent)
 )
 
 func Setup() {
@@ -29,7 +25,11 @@ func Listener() {
 		case e := <-ServiceEvents:
 			log.Printf("Service event received %v", e)
 		case e := <-CheckEvents:
-			log.Printf("Check event received %v", e)
+			log.Printf("Status event received %v", e)
+
+			if err := processors.CheckEvent(e); err != nil {
+				log.Print(e)
+			}
 		case e := <-DebugEvents:
 			log.Printf("Debug event received %v", e)
 		}

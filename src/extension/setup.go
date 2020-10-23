@@ -1,13 +1,14 @@
 package extension
 
 import (
-	"amnesia/src/config"
 	"amnesia/src/service"
 	"fmt"
 	"log"
 	"os"
 	"path/filepath"
 	"plugin"
+
+	"github.com/spf13/viper"
 )
 
 var (
@@ -50,7 +51,7 @@ func mapPlugin(path string) error {
 }
 
 func loader() error {
-	if err := filepath.Walk(config.PluginFolder, func(path string, info os.FileInfo, err error) error {
+	if err := filepath.Walk(viper.GetString("system.plugin_folder"), func(path string, info os.FileInfo, err error) error {
 		// only scan for .so plugin files
 		if info != nil && !info.IsDir() {
 			if filepath.Ext(path) == ".so" {

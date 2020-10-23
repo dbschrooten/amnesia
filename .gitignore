@@ -2,3 +2,4 @@ coverage.out
 *.code-workspace
 ./plugins
 config.toml
+amnesia_db

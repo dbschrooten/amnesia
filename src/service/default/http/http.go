@@ -6,12 +6,18 @@ import (
 )
 
 type Service struct {
-	Service interface{}
+	Service map[string]interface{}
 	lib.Implementation
 }
 
+func (s *Service) Error(err error) error {
+	return &lib.ServiceError{
+		ServiceID: s.Service["id"].(string),
+		Err:       err,
+	}
+}
+
 func (s *Service) Run() error {
-	log.Print("Check HTTP")
 	return nil
 }
 

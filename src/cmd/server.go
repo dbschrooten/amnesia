@@ -3,6 +3,8 @@ package cmd
 import (
 	"amnesia/src/channels"
 	"amnesia/src/config"
+	"amnesia/src/db"
+	"amnesia/src/db/schema"
 	"amnesia/src/dispatch"
 	"amnesia/src/extension"
 	"encoding/json"
@@ -10,6 +12,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -30,21 +33,40 @@ func Health(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func Records(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+
+	var records []schema.CheckEvent
+
+	if err := db.Conn.All(&records); err != nil {
+		log.Print(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Error retrieving records from db"))
+		return
+	}
+
+	if err := json.NewEncoder(w).Encode(map[string]interface{}{
+		"Records": records,
+	}); err != nil {
+		log.Fatal(err)
+	}
+}
+
 func Routes() *http.Server {
 	r = mux.NewRouter()
-	r.HandleFunc("/api/v1/health", Health)
+	r.HandleFunc("/api/v1/health", Health).Methods("GET")
+	r.HandleFunc("/api/v1/records", Records).Methods("GET")
 
 	return &http.Server{
 		Handler:      r,
-		Addr:         config.SrvAddr,
-		WriteTimeout: config.SrvWriteTimeout,
-		ReadTimeout:  config.SrvReadTimeout,
+		Addr:         viper.GetString("server.address"),
+		WriteTimeout: viper.GetDuration("server.write_timeout"),
+		ReadTimeout:  viper.GetDuration("server.read_timeout"),
 	}
 }
 
 func Server() error {
-	config.Load()
-
 	if err := extension.Setup(); err != nil {
 		return err
 	}
@@ -52,6 +74,12 @@ func Server() error {
 	if err := config.Setup(); err != nil {
 		return err
 	}
+
+	if err := db.Setup(); err != nil {
+		return err
+	}
+
+	defer db.Conn.Close()
 
 	channels.Setup()
 
