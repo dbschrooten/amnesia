@@ -25,6 +25,7 @@ func init() {
 	viper.SetDefault("server.read_timeout", "15s")
 
 	viper.SetDefault("system.plugin_folder", "./plugins")
+	viper.SetDefault("system.db_path", "./amnesia_db")
 }
 
 func mapServices() error {
