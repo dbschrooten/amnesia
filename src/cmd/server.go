@@ -7,6 +7,7 @@ import (
 	"amnesia/src/db/schema"
 	"amnesia/src/dispatch"
 	"amnesia/src/extension"
+	"amnesia/src/status"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -53,10 +54,26 @@ func Records(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func Status(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+
+	status.Current.AddFailure("website_healthcheck", "elasticsearch")
+	log.Print(status.Current.GetFailure("website_healthcheck", "elasticsearch"))
+
+	enc := json.NewEncoder(w)
+	enc.SetIndent("", "    ")
+
+	if err := enc.Encode(status.Current); err != nil {
+		log.Fatal(err)
+	}
+}
+
 func Routes() *http.Server {
 	r = mux.NewRouter()
 	r.HandleFunc("/api/v1/health", Health).Methods("GET")
 	r.HandleFunc("/api/v1/records", Records).Methods("GET")
+	r.HandleFunc("/api/v1/status", Status).Methods("GET")
 
 	return &http.Server{
 		Handler:      r,
@@ -72,6 +89,10 @@ func Server() error {
 	}
 
 	if err := config.Setup(); err != nil {
+		return err
+	}
+
+	if err := status.Setup(); err != nil {
 		return err
 	}
 

@@ -134,21 +134,3 @@ func (s *Service) Run() error {
 
 	return nil
 }
-
-type Event struct {
-	ID     string    `json:"id"`
-	Status bool      `json:"status,omitempty"`
-	Time   time.Time `json:"time"`
-}
-
-type ServiceStatus struct {
-	Type          string  `json:"type"`
-	ID            string  `json:"id"`
-	Label         string  `json:"label"`
-	ServiceEvents []Event `json:"service_events"`
-	StatusEvents  []Event `json:"status_events"`
-}
-
-func (s *Service) Status() (ServiceStatus, error) {
-	return ServiceStatus{}, nil
-}
