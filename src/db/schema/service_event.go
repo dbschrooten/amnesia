@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type CheckEvent struct {
+type ServiceEvent struct {
 	ID        string
 	ServiceID string
 	Time      time.Time

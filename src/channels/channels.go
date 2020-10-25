@@ -24,6 +24,10 @@ func Listener() {
 		select {
 		case e := <-ServiceEvents:
 			log.Printf("Service event received %v", e)
+
+			if err := processors.ServiceEvent(e); err != nil {
+				log.Print(e)
+			}
 		case e := <-CheckEvents:
 			log.Printf("Status event received %v", e)
 
