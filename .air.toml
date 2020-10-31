@@ -1,0 +1,17 @@
+root = "./src"
+tmp_dir = "/tmp"
+
+[build]
+cmd = "go build -o ./bin/amnesia ./src/main.go"
+bin = "bin/amnesia"
+full_bin = "./bin/amnesia serve"
+include_ext = ["go", "html"]
+exclude_dir = ["dashboard/webcomponents"]
+stop_on_error = true
+send_interrupt = true
+
+[log]
+time = true
+
+[misc]
+clean_on_exit = false
