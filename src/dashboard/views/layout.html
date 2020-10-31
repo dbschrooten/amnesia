@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Amnesia</title>
+
+    <link href="/static/main.css" rel="stylesheet">
+  </head>
+
+  <body class="background-light">
+    <header class="text-gray-700 body-font bg-black">
+      <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+        <a class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
+          <span class="logo-amnesia ml-3 text-xl text-white">amnesia</span>
+        </a>
+        <nav class="md:mr-auto md:ml-4 md:py-1 md:pl-4 flex flex-wrap items-center text-white justify-center">
+          <a class="mr-5 hover:text-green-600">Status</a>
+          <a class="mr-5 hover:text-green-600">Events</a>
+          <a class="mr-5 hover:text-green-600">Explorer</a>
+        </nav>
+      </div>
+    </header>
+    
+    {{ template "content" . }}
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.5.0/webcomponents-loader.min.js"></script>
+    <script type="module" src="/static/main.js"></script>
+  </body>
+</html>

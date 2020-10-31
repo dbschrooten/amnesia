@@ -1,0 +1,27 @@
+{{ define "content" }}
+<section class="text-gray-700 body-font">
+  <div class="container px-5 py-24 mx-auto">
+    <div class="flex flex-wrap lg:w-4/5 sm:mx-auto sm:mb-2 -mx-2">
+      {{ range .Services }}
+        <service-summary class="p-2 sm:w-1/2 w-full">
+          <div class="h-full p-6 rounded-lg border-2 border-green-500 flex flex-col relative overflow-hidden">
+            <span class="bg-green-500 text-white px-3 py-1 tracking-widest text-xs absolute right-0 top-0 rounded-bl">Online</span>
+            <h2 class="text-sm tracking-widest title-font mb-1 font-medium">{{ .Type }}</h2>
+            <h1 class="text-3xl text-gray-900 leading-none flex mb-1 items-center border-gray-200">
+              <span>{{ .Label }}</span>
+            </h1>
+            <h3 class="text-xs tracking-widest title-font mb-1 font-light pb-4 mb-4 border-b ">Last check at {{ .LastCheck }}</h2>
+          
+            <button class="flex items-center mt-auto text-white bg-green-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-green-600 rounded">
+              View service details
+              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-auto" viewBox="0 0 24 24">
+                <path d="M5 12h14M12 5l7 7-7 7"></path>
+              </svg>
+            </button>
+          </div>
+        </service-summary>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}

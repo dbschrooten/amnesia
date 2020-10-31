@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "rollup -c rollup.config.js",
+    "watch": "rollup -c rollup.config.js -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,12 +19,12 @@
   },
   "homepage": "https://github.com/dbschrooten/amnesia#readme",
   "dependencies": {
+    "apexcharts": "^3.22.0",
     "lit-element": "^2.4.0",
     "tailwindcss": "^1.9.6"
   },
   "devDependencies": {
-    "@webcomponents/webcomponentsjs": "^2.5.0",
-    "autoprefixer": "^10.0.1",
+    "autoprefixer": "^9.8.6",
     "node-sass": "^4.14.1",
     "rollup": "^2.32.1",
     "rollup-plugin-commonjs": "^10.1.0",

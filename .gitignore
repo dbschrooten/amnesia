@@ -5,3 +5,4 @@ config.toml
 amnesia_db
 data
 node_modules
+bin
